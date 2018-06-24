@@ -1,2 +1,2 @@
 # kxfire
-A mockup RPG to experiment with Kotlin
+A mockup RPG to experiment with Kotlin.
