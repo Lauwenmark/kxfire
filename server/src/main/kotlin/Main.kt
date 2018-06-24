@@ -1,10 +1,15 @@
 package eu.lauwenmark.jxfire.server
 
 import eu.lauwenmark.jxfire.server.entities.GameEntity
+import eu.lauwenmark.jxfire.server.events.createEventQueue
+import eu.lauwenmark.jxfire.server.services.TickService
+import eu.lauwenmark.jxfire.server.services.registerService
 import java.math.BigInteger
 
 fun main(args: Array<String>) {
-    System.out.println("Hello");
+    System.out.println("Hello")
+    createEventQueue("main")
+    registerService(TickService())
 }
 
 interface Playfield {

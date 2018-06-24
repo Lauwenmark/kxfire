@@ -6,6 +6,8 @@ interface Event {
 
 }
 
+class TickEvent(val count: Long) : Event
+
 interface EventListener {
     fun eventReceived(event: Event)
 }
