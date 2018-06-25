@@ -6,6 +6,17 @@ interface Component {
     val entity: GameEntity
 }
 
+val components = HashMap<Class<Component>, MutableList<Component>>()
+
+fun registerComponent(component: Component) {
+    if (components[component.javaClass] == null) components[component.javaClass] = ArrayList()
+    components[component.javaClass]?.add(component)
+}
+
+fun unregisterComponent(component: Component) {
+    components[component.javaClass]?.remove(component)
+}
+
 /**
  * A Component giving the size of an entity on the playfield, in game squares.
  */

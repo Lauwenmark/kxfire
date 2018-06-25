@@ -8,4 +8,5 @@ fun main(args: Array<String>) {
     System.out.println("Hello")
     createEventQueue("main")
     registerService(TickService())
+
 }
