@@ -1,11 +1,9 @@
 package eu.lauwenmark.jxfire.server.services
 
 import eu.lauwenmark.jxfire.server.components.Controlled
+import eu.lauwenmark.jxfire.server.components.Position
 import eu.lauwenmark.jxfire.server.components.findComponents
-import eu.lauwenmark.jxfire.server.events.Event
-import eu.lauwenmark.jxfire.server.events.EventListener
-import eu.lauwenmark.jxfire.server.events.TickEvent
-import eu.lauwenmark.jxfire.server.events.getEventQueue
+import eu.lauwenmark.jxfire.server.events.*
 
 interface Service {
     fun reset()
@@ -62,7 +60,6 @@ class ControllerService : Service {
         //Nothing to do
     }
     override fun step() {
-        System.out.println("Controlled: " + findComponents(Controlled::class.java).size)
         for (component in findComponents(Controlled::class.java)) {
             (component as Controlled).controller.tick(component)
         }
@@ -115,6 +112,50 @@ class TickService : Service {
         if (running) {
             tick++
             getEventQueue("main").post(TickEvent(tick))
+        }
+    }
+}
+
+class MoveService : Service, EventListener {
+    private var running = false
+
+    override fun eventReceived(event: Event) {
+        when(event) {
+            is MoveUpCommand -> {
+                val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
+                event.entity[Position::class.java] = Position(pos.entity, x=pos.x, y=pos.y-1)
+                System.out.println(event.entity[Position::class.java])
+            }
+            is MoveDownCommand -> {
+                val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
+                event.entity[Position::class.java] = Position(pos.entity, x=pos.x, y=pos.y+1)
+                System.out.println(event.entity[Position::class.java])
+            }
+            is MoveLeftCommand -> {
+                val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
+                event.entity[Position::class.java] = Position(pos.entity, x=pos.x-1, y=pos.y)
+                System.out.println(event.entity[Position::class.java])
+            }
+            is MoveRightCommand -> {
+                val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
+                event.entity[Position::class.java] = Position(pos.entity, x=pos.x+1, y=pos.y)
+                System.out.println(event.entity[Position::class.java])
+            }
+        }
+    }
+    override fun reset() {
+        running = false
+    }
+    override fun start() {
+        running = true
+        getEventQueue("command").members.add(this)
+    }
+    override fun stop() {
+        running = false
+    }
+    override fun step() {
+        if (running) {
+
         }
     }
 }

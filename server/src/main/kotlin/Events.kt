@@ -3,15 +3,17 @@ package eu.lauwenmark.jxfire.server.events
 import eu.lauwenmark.jxfire.server.components.Component
 import java.util.concurrent.ConcurrentLinkedQueue
 
-interface Event {
+interface Event
 
+abstract class AbstractComponentEvent(val component: Component) : Event {
+    val entity = component.entity
+    override fun toString(): String = "[${this.javaClass.simpleName}: ${this.component}]"
 }
-
 class TickEvent(val count: Long) : Event
-class MoveLeftCommand(val component: Component) : Event
-class MoveRightCommand(val component: Component) : Event
-class MoveUpCommand(val component: Component) : Event
-class MoveDownCommand(val comment: Component) : Event
+class MoveLeftCommand(component: Component) : AbstractComponentEvent(component)
+class MoveRightCommand(component: Component) : AbstractComponentEvent(component)
+class MoveUpCommand(component: Component) : AbstractComponentEvent(component)
+class MoveDownCommand(component: Component) : AbstractComponentEvent(component)
 
 interface EventListener {
     fun eventReceived(event: Event)
@@ -39,7 +41,7 @@ private val eventQueues = HashMap<String, EventQueue>()
 
 fun createEventQueue(name: String) {
     if (eventQueues.containsKey(name))
-        throw IllegalArgumentException("An event queue of that name already exists.");
+        throw IllegalArgumentException("An event queue of that name already exists.")
     else
         eventQueues[name] = EventQueue()
 }

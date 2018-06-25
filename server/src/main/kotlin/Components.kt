@@ -3,8 +3,8 @@ package eu.lauwenmark.jxfire.server.components
 import eu.lauwenmark.jxfire.server.controllers.Controller
 import eu.lauwenmark.jxfire.server.entities.GameEntity
 
-interface Component {
-    val entity: GameEntity
+abstract class Component(val entity: GameEntity){
+    override fun toString() = "[${this.javaClass.simpleName}: ${this.entity}]"
 }
 
 val components = HashMap<Class<out Component>, MutableList<Component>>()
@@ -12,6 +12,7 @@ val components = HashMap<Class<out Component>, MutableList<Component>>()
 fun registerComponent(component: Component) {
     if (components[component.javaClass] == null) components[component.javaClass] = ArrayList()
     components[component.javaClass]?.add(component)
+    component.entity[component.javaClass] = component
 }
 
 fun unregisterComponent(component: Component) {
@@ -23,46 +24,40 @@ fun findComponents(type: Class<out Component>): MutableList<Component> {
     return components[type] ?: throw RuntimeException("This should never happen.")
 }
 
-abstract class AbstractComponent(override val entity: GameEntity) : Component {
-    init {
-        registerComponent(this)
-    }
-}
-
 /**
  * A Component giving the size of an entity on the playfield, in game squares.
  */
-class Size(override val entity: GameEntity, val width: Int, val height: Int) : AbstractComponent(entity) {
-
+class Size(entity: GameEntity, val width: Int, val height: Int) : Component(entity) {
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, w: $width, h: $height]"
 }
 
 /**
  * A Component giving the position of an entity on the playfield.
  */
-class Position(override val entity: GameEntity, val x: Int, val y: Int) : AbstractComponent(entity) {
-
+class Position(entity: GameEntity, val x: Int, val y: Int) : Component(entity) {
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, x: $x, y: $y]"
 }
 
 /**
  * A Component holding the name of an entity, as perceived by other entities.
  */
-class Caption(override val entity: GameEntity, val caption: String) : AbstractComponent(entity) {
-
+class Caption(entity: GameEntity, val caption: String) : Component(entity) {
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, caption: $caption]"
 }
 
 /**
  * A Component describing the speed at which an entity can emit commands.
  */
-class Speed(override val entity: GameEntity, val speed: Int) : AbstractComponent(entity) {
-
+class Speed(entity: GameEntity, val speed: Int) : Component(entity) {
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, speed:$speed]"
 }
 
 /**
  * A Component describing the fact that an entity can be seen.
  * The visibility factor tells how easy it is to spot (the higher it is, the easier).
  */
-class Visible(override val entity: GameEntity, val visibility: Int) : AbstractComponent(entity) {
-
+class Visible(entity: GameEntity, val visibility: Int) : Component(entity) {
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, v: $visibility]"
 }
 
 /**
@@ -71,17 +66,18 @@ class Visible(override val entity: GameEntity, val visibility: Int) : AbstractCo
  * see something at a given range.
  * The range describes how far the eye can see.
  */
-class Sight(override val entity: GameEntity, val accuracy: Int, val range: Int) : AbstractComponent(entity) {
-
+class Sight(entity: GameEntity, val accuracy: Int, val range: Int) : Component(entity) {
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, range: $range, accuracy: $accuracy]"
 }
 
 /**
  * A Component describing the outlook of an entity.
  */
-class Appearance(override val entity: GameEntity, val appearance: String) : AbstractComponent(entity) {
-
+class Appearance(entity: GameEntity, val appearance: String) : Component(entity) {
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, appearance: $appearance]"
 }
 
-class Controlled(override val entity: GameEntity, val controller: Controller) : AbstractComponent(entity) {
+class Controlled(entity: GameEntity, val controller: Controller) : Component(entity) {
 
+    override fun toString() = "[${this.javaClass.simpleName}: $entity, controller: $controller]"
 }
