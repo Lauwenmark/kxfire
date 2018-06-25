@@ -1,5 +1,6 @@
 package eu.lauwenmark.jxfire.server.events
 
+import eu.lauwenmark.jxfire.server.components.Component
 import java.util.concurrent.ConcurrentLinkedQueue
 
 interface Event {
@@ -7,6 +8,10 @@ interface Event {
 }
 
 class TickEvent(val count: Long) : Event
+class MoveLeftCommand(val component: Component) : Event
+class MoveRightCommand(val component: Component) : Event
+class MoveUpCommand(val component: Component) : Event
+class MoveDownCommand(val comment: Component) : Event
 
 interface EventListener {
     fun eventReceived(event: Event)
