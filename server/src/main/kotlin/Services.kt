@@ -47,7 +47,10 @@ fun resetServices() {
     }
 }
 
-class ControllerService : Service {
+class ControllerService private constructor(): Service {
+    companion object {
+        fun register() = registerService(ControllerService())
+    }
     override fun reset() {
         for(component in findComponents(Controlled::class.java)) {
             (component as Controlled).controller.reset()
@@ -66,7 +69,10 @@ class ControllerService : Service {
     }
 }
 
-class CommandMonitorService : Service, EventListener {
+class CommandMonitorService private constructor(): Service, EventListener {
+    companion object {
+        fun register() = registerService(CommandMonitorService())
+    }
     override fun reset() {}
     override fun start() {
         getEventQueue("command").members.add(this)
@@ -78,7 +84,10 @@ class CommandMonitorService : Service, EventListener {
     }
 }
 
-class EventMonitorService : Service, EventListener {
+class EventMonitorService private constructor(): Service, EventListener {
+    companion object {
+        fun register() = registerService(EventMonitorService())
+    }
     override fun reset() {}
     override fun start() {
         getEventQueue("main").members.add(this)
@@ -94,11 +103,14 @@ class EventMonitorService : Service, EventListener {
  * A demo service keeping the number of ticks spent since the game initialization.
  * At each tick, the service posts a TickEvent.
  */
-class TickService : Service {
+class TickService private constructor(): Service {
 
     private var tick = 0L
     private var running = true
 
+    companion object {
+        fun register() = registerService(TickService())
+    }
     override fun reset() {
         tick = 0
     }
@@ -116,29 +128,33 @@ class TickService : Service {
     }
 }
 
-class MoveService : Service, EventListener {
+class MoveService private constructor(): Service, EventListener {
     private var running = false
+
+    companion object {
+        fun register() = registerService(MoveService())
+    }
 
     override fun eventReceived(event: Event) {
         when(event) {
             is MoveUpCommand -> {
                 val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
-                event.entity[Position::class.java] = Position(pos.entity, x=pos.x, y=pos.y-1)
+                event.entity[Position::class.java] = Position.register(pos.entity, x=pos.x, y=pos.y-1)
                 System.out.println(event.entity[Position::class.java])
             }
             is MoveDownCommand -> {
                 val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
-                event.entity[Position::class.java] = Position(pos.entity, x=pos.x, y=pos.y+1)
+                event.entity[Position::class.java] = Position.register(pos.entity, x=pos.x, y=pos.y+1)
                 System.out.println(event.entity[Position::class.java])
             }
             is MoveLeftCommand -> {
                 val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
-                event.entity[Position::class.java] = Position(pos.entity, x=pos.x-1, y=pos.y)
+                event.entity[Position::class.java] = Position.register(pos.entity, x=pos.x-1, y=pos.y)
                 System.out.println(event.entity[Position::class.java])
             }
             is MoveRightCommand -> {
                 val pos = event.entity[Position::class.java] as? Position ?: throw IllegalArgumentException("An entity cannot be the target of move commands if it doesn't have a position.")
-                event.entity[Position::class.java] = Position(pos.entity, x=pos.x+1, y=pos.y)
+                event.entity[Position::class.java] = Position.register(pos.entity, x=pos.x+1, y=pos.y)
                 System.out.println(event.entity[Position::class.java])
             }
         }

@@ -8,7 +8,7 @@ class GameEntity {
     operator fun set(id : Class<out Component>, component : Component) {
         components[id] = component
     }
-
+    fun contains(id: Class<out Component>) = components.containsKey(id)
     override fun toString() : String = "[Entity: ${this.hashCode()}]"
 
 }
