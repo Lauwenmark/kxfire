@@ -8,7 +8,7 @@ import eu.lauwenmark.jxfire.server.events.getEventQueue
 import eu.lauwenmark.jxfire.server.services.*
 
 fun main(args: Array<String>) {
-    System.out.println("Hello")
+    System.out.println("This is KXFire! The Wonderfully Wonderful RPG!")
     createEventQueue("main")
     createEventQueue("command")
     registerService(TickService())
@@ -27,10 +27,7 @@ fun main(args: Array<String>) {
     Sight(rabbit, 1, 4)
     Controlled(rabbit, RandomRunnerController())
 
-    getService(TickService::class.java).start()
-    getService(ControllerService::class.java).start()
-    getService(CommandMonitorService::class.java).start()
-    getService(EventMonitorService::class.java).start()
+    startServices()
 
     while(true) {
         stepServices()

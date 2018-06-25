@@ -18,6 +18,7 @@ private val services = HashMap<Class<out Service>, Service>()
 
 fun registerService(service: Service) {
     services[service.javaClass] = service
+    service.reset()
 }
 
 fun getService(cl : Class<out Service>) : Service {
@@ -27,6 +28,24 @@ fun getService(cl : Class<out Service>) : Service {
 fun stepServices() {
     for(service in services.values) {
         service.step()
+    }
+}
+
+fun startServices() {
+    for (service in services.values) {
+        service.start()
+    }
+}
+
+fun stopServices() {
+    for (service in services.values) {
+        service.stop()
+    }
+}
+
+fun resetServices() {
+    for (service in services.values) {
+        service.reset()
     }
 }
 
