@@ -8,6 +8,11 @@ import eu.lauwenmark.jxfire.server.events.createEventQueue
 import eu.lauwenmark.jxfire.server.events.getEventQueue
 import eu.lauwenmark.jxfire.server.services.*
 
+/**
+ * The main entry point.
+ *
+ * @param args The command line arguments.
+ */
 fun main(args: Array<String>) {
     System.out.println("This is KXFire! The Wonderfully Wonderful RPG!")
     //Create the events queue. "main" is for events, "command" for commands emitted by entities through services.

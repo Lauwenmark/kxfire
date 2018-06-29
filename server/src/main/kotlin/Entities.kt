@@ -2,6 +2,11 @@ package eu.lauwenmark.jxfire.server.entities
 
 import eu.lauwenmark.jxfire.server.components.Component
 
+/**
+ * The base game entity.
+ *
+ * The game entity is
+ */
 class GameEntity {
     private val components = HashMap<Class<out Component>, Component>()
     operator fun get(id : Class<out Component>) : Component? = components[id]
