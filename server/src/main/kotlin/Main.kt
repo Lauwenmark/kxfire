@@ -7,6 +7,7 @@ import eu.lauwenmark.jxfire.server.entities.entities
 import eu.lauwenmark.jxfire.server.events.createEventQueue
 import eu.lauwenmark.jxfire.server.events.getEventQueue
 import eu.lauwenmark.jxfire.server.services.*
+import mu.KotlinLogging
 
 /**
  * The main entry point.
@@ -14,7 +15,8 @@ import eu.lauwenmark.jxfire.server.services.*
  * @param args The command line arguments.
  */
 fun main(args: Array<String>) {
-    System.out.println("This is KXFire! The Wonderfully Wonderful RPG!")
+    val logger = KotlinLogging.logger {}
+    logger.info { "This is KXFire! The Wonderfully Wonderful RPG!" }
     //Create the events queue. "main" is for events, "command" for commands emitted by entities through services.
     createEventQueue("main")
     createEventQueue("command")
@@ -43,7 +45,7 @@ fun main(args: Array<String>) {
         stepServices()
         getEventQueue("main").flush()
         getEventQueue("command").flush()
-        System.out.println("----------------------------------------")
+        logger.debug { "----------------------------------------" }
         Thread.sleep(1000)
     }
 }
